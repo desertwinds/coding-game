@@ -30,7 +30,7 @@ public class PlayerScript : MonoBehaviour {
 
 	private void OnEnable ()
 	{
-		m_RigidBody.isKinematic = false;
+		//m_RigidBody.isKinematic = false;
 		m_PlayerFell = false;
 		m_Finished = false;
 		calculateLogicalRotation ((int) this.transform.rotation.eulerAngles.y);
@@ -43,7 +43,7 @@ public class PlayerScript : MonoBehaviour {
 
 	private void OnDisable ()
 	{
-		m_RigidBody.isKinematic = true;
+		//m_RigidBody.isKinematic = true;
 	}
 
 	void OnTriggerEnter(Collider other){
@@ -54,10 +54,9 @@ public class PlayerScript : MonoBehaviour {
 
 
 	public IEnumerator move(){
-
-
-		if (!canMove ())
+		if (!canMove ()) {
 			yield break;
+		}
 		
 		Vector3 end = transform.position + transform.forward;
 
@@ -83,6 +82,97 @@ public class PlayerScript : MonoBehaviour {
 			yield return null;
 		}
 
+	}
+
+	public IEnumerator jump(){
+		if (!canJump ()) {
+			yield break;
+		}
+
+		Vector3 end = transform.position + transform.forward;
+		end = end + transform.up;
+
+		float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+		//While that distance is greater than a very small amount (Epsilon, almost zero):
+		while(sqrRemainingDistance > float.Epsilon)
+		{
+			//Find a new position proportionally closer to the end, based on the moveTime
+			Vector3 newPostion = Vector3.MoveTowards(m_RigidBody.position, end, m_Speed * Time.deltaTime);
+
+			//Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+			m_RigidBody.MovePosition (newPostion);
+
+			//Recalculate the remaining distance after moving.
+			sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+
+			//Return and loop until sqrRemainingDistance is close enough to zero to end the function
+			yield return null;
+		}
+
+		yield return new WaitForFixedUpdate();
+
+		end = transform.position - transform.up;
+		end = end + transform.forward;
+
+		sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+
+		//While that distance is greater than a very small amount (Epsilon, almost zero):
+		while(sqrRemainingDistance > float.Epsilon)
+		{
+			//Find a new position proportionally closer to the end, based on the moveTime
+			Vector3 newPostion = Vector3.MoveTowards(m_RigidBody.position, end, m_Speed * Time.deltaTime);
+
+			//Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+			m_RigidBody.MovePosition (newPostion);
+
+			//Recalculate the remaining distance after moving.
+			sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+
+			//Return and loop until sqrRemainingDistance is close enough to zero to end the function
+			yield return null;
+		}
+
+		yield return new WaitForFixedUpdate();
+
+
+	}
+
+	public void logicalJump(){
+		canJump ();
+	}
+
+	private bool canJump(){
+
+		TupleI jumpAbove = m_currentPosition + m_currentRotation;
+		TupleI landOn = jumpAbove + m_currentRotation;
+
+		GameObject tile = null;
+		m_map.TryGetValue (jumpAbove, out tile);
+		//First see if the tile in front can be jumped over.
+		if (tile == null || tile.CompareTag("Floor")){
+			tile = null;
+			//Next see if the tile where it is supposed to land is available.
+			if (m_map.TryGetValue (landOn, out tile)) {
+				//Finally see if such tile is walkable.
+				if (tile.CompareTag ("Floor")) {
+					m_currentPosition = landOn;
+					return true;
+				}
+				//This case means that we would land on a blocked tile.
+				else {
+					return false;
+				}
+			} 
+			//This means we are jumping into the void.
+			else {
+				m_PlayerFell = true;
+				return false;
+			}
+		}
+		//There is something blocking our way and we can't jump it.
+		else{
+			return false;
+		}
 	}
 
 	private bool canMove(){
@@ -154,7 +244,6 @@ public class PlayerScript : MonoBehaviour {
 	}
 		
 	private void calculateLogicalRotation(int angle){
-
 		switch(angle){
 
 		case 0:
