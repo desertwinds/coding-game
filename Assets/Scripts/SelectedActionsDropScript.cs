@@ -9,7 +9,8 @@ public class SelectedActionsDropScript : MonoBehaviour, IDropHandler, IPointerEn
 			return;
 
 		DraggableScript d = eventData.pointerDrag.GetComponent<DraggableScript> ();
-		if (d.getPlaceholder() == null){
+		if ( d != null && d.getPlaceholder() == null){
+			//This is the selected action's viewport, and we want to drop on it's child (content gameobject)
 			Transform contentTransf = this.transform.GetChild (0);
 			d.setPlaceholder (contentTransf, contentTransf.childCount);
 		}
@@ -26,6 +27,10 @@ public class SelectedActionsDropScript : MonoBehaviour, IDropHandler, IPointerEn
 	public void OnDrop(PointerEventData eventData){
 		DraggableScript d = eventData.pointerDrag.GetComponent<DraggableScript> ();
 		if (d != null){
+			if(d.getPlaceholder() == null){
+				Transform contentTransf = this.transform.GetChild (0);
+				d.setPlaceholder (contentTransf, contentTransf.childCount);
+			}
 			d.m_DeleteAfterDrag = false;
 			d.m_FinalDestination = this.transform;
 		}
