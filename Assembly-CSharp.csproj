@@ -45,18 +45,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Action scripts\JumpActionScript.cs" />
+     <Compile Include="Assets\Scripts\Action scripts\MoveActionScript.cs" />
+     <Compile Include="Assets\Scripts\Action scripts\PlayerActionsScript.cs" />
+     <Compile Include="Assets\Scripts\Action scripts\TurnActionScript.cs" />
      <Compile Include="Assets\Scripts\ActionManagerScript.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\DraggableScript.cs" />
      <Compile Include="Assets\Scripts\FinishLine.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\MoveActionScript.cs" />
-     <Compile Include="Assets\Scripts\PlayerActionsScript.cs" />
      <Compile Include="Assets\Scripts\PlayerScript.cs" />
      <Compile Include="Assets\Scripts\SelectedActionDraggableScript.cs" />
      <Compile Include="Assets\Scripts\SelectedActionsDropScript.cs" />
      <Compile Include="Assets\Scripts\Tuple.cs" />
-     <Compile Include="Assets\Scripts\TurnActionScript.cs" />
+     <None Include="Assets\StarNestSkybox\StarNestSkyboxReadme.txt" />
+     <None Include="Assets\StarNestSkybox\StarNestSkybox_HSV.shader" />
+     <None Include="Assets\StarNestSkybox\StarNestSkyboxMask.shader" />
+     <None Include="Assets\StarNestSkybox\hsv.cginc" />
+     <None Include="Assets\StarNestSkybox\StarNestSkybox.shader" />
+     <None Include="Assets\StarNestSkybox\StarNest.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

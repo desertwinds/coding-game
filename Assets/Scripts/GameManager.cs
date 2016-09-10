@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour {
 		yield return StartCoroutine (LevelEnding ());
 	}
 
+	private IEnumerator quickRunLoop(){
+		yield return StartCoroutine (m_ActionManager.quickRun ());
+		yield return StartCoroutine (LevelEnding ());
+	}
+
 	private IEnumerator LevelPlaying(){
 		
 		//while(!reachedFinish() && !playerFell()){
@@ -85,7 +90,7 @@ public class GameManager : MonoBehaviour {
 		m_ActionManager.stopActions ();
 		m_GameRoutine = GameLoop();
 		restartPlayerPosition ();
-		StartCoroutine(m_ActionManager.quickRun());
+		StartCoroutine(this.quickRunLoop());
 	}
 
 	public void restartPlayerPosition(){
