@@ -27,6 +27,10 @@ public class LevelManagerScript : MonoBehaviour {
 
 		}
 	}
+
+	public void exitGame(){
+		Application.Quit ();
+	}
 	
 
 }

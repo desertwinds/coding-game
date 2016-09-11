@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
 	public GameObject m_PlayerPrefab;
-	public Text m_Text;
 	public ActionManagerScript m_ActionManager;
 	public GameObject m_level;
 	public Transform m_possibleActionsHolder;
+	public GameObject m_finalMessageWindow;
 
 	private GameObject m_Player;
 	private GameObject m_StartPoint;
@@ -18,17 +18,19 @@ public class GameManager : MonoBehaviour {
 	private IEnumerator m_GameRoutine;
 	private CameraScript m_cameraScript;
 	private int m_currentLevel;
+	private Text m_text;
+	private GameObject m_continueButton;
 
 	void Awake(){
-		
-		m_Text.text = "";
-		m_Text.gameObject.SetActive (false);
+
 		m_GameRoutine = GameLoop();
 		m_currentLevel = PlayerPrefs.GetInt ("currentLevel");
 		GameObject levelPrefab = Resources.Load<GameObject> ("Levels/Level" + m_currentLevel);
 		m_level = Instantiate (levelPrefab) as GameObject;
 		m_StartPoint = GameObject.FindGameObjectsWithTag ("Respawn")[0];
 		m_cameraScript = gameObject.GetComponent<CameraScript> ();
+		m_text = m_finalMessageWindow.transform.FindChild ("MessageText").GetComponent<Text>();
+		m_continueButton = m_finalMessageWindow.transform.FindChild ("ContinueButton").gameObject;
 	}
 
 	// Use this for initialization
@@ -77,19 +79,20 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator LevelEnding(){
-		m_Text.text = "You are almost there. Try to get to the finish line.";
+		m_text.text = "You are almost there. Try to get to the finish line.";
 		m_LevelCompleted = false;
 
 		if (playerFell ()) {
-			m_Text.text = "Woops try not to fall from the map.";
+			m_text.text = "Woops try not to fall from the map.";
 		}
 
 		if(reachedFinish()){
-			m_Text.text = "Level " + m_currentLevel + " completed!";
+			m_text.text = "Level " + m_currentLevel + " completed!";
 			m_LevelCompleted = true;
+			m_continueButton.SetActive (true);
 		}
 
-		m_Text.gameObject.SetActive (true);
+		m_finalMessageWindow.SetActive (true);
 
 		yield return null;
 	}
@@ -131,6 +134,10 @@ public class GameManager : MonoBehaviour {
 
 	public void exitLevel(){
 		SceneManager.LoadScene (0);
+	}
+
+	public void dismissMessage(){
+		m_finalMessageWindow.SetActive (false);
 	}
 		
 }
