@@ -104,7 +104,9 @@ public class DraggableScript : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 	private void setContentHeight(){
 		GridLayoutGroup gridLayout = m_PlaceholderParent.GetComponent<GridLayoutGroup>();
 		RectTransform scrollContent = m_PlaceholderParent.GetComponent<RectTransform> ();
-		float scrollContentHeight = (gridLayout.transform.childCount * gridLayout.cellSize.y) + ((gridLayout.transform.childCount - 1) * gridLayout.spacing.y);
+		if(scrollContent.sizeDelta.y/gridLayout.cellSize.y > (gridLayout.transform.childCount + 5))
+			return;
+		float scrollContentHeight = ((gridLayout.transform.childCount + 4) * gridLayout.cellSize.y) + ((gridLayout.transform.childCount - 1) * gridLayout.spacing.y);
 		scrollContent.sizeDelta = new Vector2(0, scrollContentHeight);
 	}
 

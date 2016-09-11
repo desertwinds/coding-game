@@ -1,37 +1,61 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
 	public GameObject m_PlayerPrefab;
 	public Text m_Text;
 	public ActionManagerScript m_ActionManager;
+	public GameObject m_level;
+	public Transform m_possibleActionsHolder;
 
 	private GameObject m_Player;
 	private GameObject m_StartPoint;
 	private PlayerScript m_PlayerScript;
 	private bool m_LevelCompleted = false;
 	private IEnumerator m_GameRoutine;
+	private CameraScript m_cameraScript;
 
+	void Awake(){
+		
+		m_Text.text = "";
+		m_Text.gameObject.SetActive (false);
+		m_GameRoutine = GameLoop();
+		int level = PlayerPrefs.GetInt ("currentLevel");
+		GameObject levelPrefab = Resources.Load<GameObject> ("Levels/Level" + level);
+		m_level = Instantiate (levelPrefab) as GameObject;
+		m_StartPoint = GameObject.FindGameObjectsWithTag ("Respawn")[0];
+		m_cameraScript = gameObject.GetComponent<CameraScript> ();
+	}
 
 	// Use this for initialization
 	void Start () {
 
-		m_StartPoint = GameObject.FindGameObjectsWithTag ("Respawn")[0];
+		m_cameraScript.level = m_level;
+		m_cameraScript.updateCameraPosition ();
+		SpawnActions ();
 		SpawnPlayer ();
 		m_ActionManager.m_Player = m_Player;
 		m_ActionManager.m_PlayerScript = m_PlayerScript;
 		m_ActionManager.initialize(m_StartPoint.transform);
-		m_Text.text = "";
-		m_Text.gameObject.SetActive (false);
-		m_GameRoutine = GameLoop();
+
 
 	}
+
 
 	private void SpawnPlayer (){
 		m_Player = Instantiate (m_PlayerPrefab, m_StartPoint.transform.position, m_StartPoint.transform.rotation) as GameObject;
 		m_PlayerScript = m_Player.GetComponent<PlayerScript> ();
+	}
+
+	private void SpawnActions(){
+		GameObject[] actions = m_level.GetComponent<LevelActionsScript> ().m_possibleActions;
+		GameObject newAction;
+		foreach (GameObject action in actions) {
+			newAction = Instantiate (action, m_possibleActionsHolder, false) as GameObject;
+		}
 	}
 
 	private IEnumerator GameLoop(){
@@ -99,4 +123,9 @@ public class GameManager : MonoBehaviour {
 		m_Player.transform.rotation = m_StartPoint.transform.rotation;
 		m_Player.SetActive (true);
 	}
+
+	public void exitLevel(){
+		SceneManager.LoadScene (0);
+	}
+		
 }

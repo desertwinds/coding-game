@@ -11,7 +11,7 @@ public class CameraScript : MonoBehaviour {
 	int m_furthestPositionY;
 
 	float m_minSize = 0f;
-	float m_maxSize;
+	float m_maxSize = 1f;
 
 	public GameObject level;
 
@@ -24,9 +24,7 @@ public class CameraScript : MonoBehaviour {
 		Camera cam = GetComponent<Camera> ();
 		cam.ScreenToWorldPoint (new Vector3 (0f, Screen.height * 2f, 0f));
 		m_Map = new Dictionary<TupleI, GameObject> ();
-		updateCameraPosition ();
-
-	
+		//updateCameraPosition ();
 	}
 
 	void Update(){
@@ -52,7 +50,7 @@ public class CameraScript : MonoBehaviour {
 		lastFramePosition =  (Input.mousePosition);
 	}
 
-	void updateCameraPosition(){
+	public void updateCameraPosition(){
 
 		Vector3 max_x = origin;
 		Vector3 min_x = origin;
@@ -61,9 +59,7 @@ public class CameraScript : MonoBehaviour {
 		int position_x;
 		int position_z;
 		TupleI tilePosition;
-
 		foreach(Transform trans in level.GetComponentInChildren<Transform>()){
-
 			position_x = (int) Mathf.Floor (trans.position.x);
 			position_z = (int) Mathf.Floor (trans.position.z);
 			tilePosition = new TupleI (position_x, position_z);
