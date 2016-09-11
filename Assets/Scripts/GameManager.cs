@@ -17,14 +17,15 @@ public class GameManager : MonoBehaviour {
 	private bool m_LevelCompleted = false;
 	private IEnumerator m_GameRoutine;
 	private CameraScript m_cameraScript;
+	private int m_currentLevel;
 
 	void Awake(){
 		
 		m_Text.text = "";
 		m_Text.gameObject.SetActive (false);
 		m_GameRoutine = GameLoop();
-		int level = PlayerPrefs.GetInt ("currentLevel");
-		GameObject levelPrefab = Resources.Load<GameObject> ("Levels/Level" + level);
+		m_currentLevel = PlayerPrefs.GetInt ("currentLevel");
+		GameObject levelPrefab = Resources.Load<GameObject> ("Levels/Level" + m_currentLevel);
 		m_level = Instantiate (levelPrefab) as GameObject;
 		m_StartPoint = GameObject.FindGameObjectsWithTag ("Respawn")[0];
 		m_cameraScript = gameObject.GetComponent<CameraScript> ();
@@ -76,12 +77,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator LevelEnding(){
-		m_Text.text = "Yay finished!";
-		m_LevelCompleted = true;
+		m_Text.text = "You are almost there. Try to get to the finish line.";
+		m_LevelCompleted = false;
 
 		if (playerFell ()) {
-			m_Text.text = "Woops try not to fall from the level.";
-			m_LevelCompleted = false;
+			m_Text.text = "Woops try not to fall from the map.";
+		}
+
+		if(reachedFinish()){
+			m_Text.text = "Level " + m_currentLevel + " completed!";
+			m_LevelCompleted = true;
 		}
 
 		m_Text.gameObject.SetActive (true);

@@ -19,8 +19,7 @@ public class CameraScript : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
-
+	void Awake () {
 		Camera cam = GetComponent<Camera> ();
 		cam.ScreenToWorldPoint (new Vector3 (0f, Screen.height * 2f, 0f));
 		m_Map = new Dictionary<TupleI, GameObject> ();
