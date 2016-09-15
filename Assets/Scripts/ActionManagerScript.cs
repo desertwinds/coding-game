@@ -37,6 +37,7 @@ public class ActionManagerScript : MonoBehaviour {
 			script = (m_PlayerActions [currentScriptPosition] as PlayerActionsScript);
 			yield return StartCoroutine(script.Run ());
 			currentStep++;
+			m_KeepRunning = m_PlayerScript.m_canMove;
 		}
 		yield return null;
 	}
@@ -61,6 +62,7 @@ public class ActionManagerScript : MonoBehaviour {
 			script = (m_PlayerActions [currentScriptPosition] as PlayerActionsScript);
 			yield return StartCoroutine(script.QuickRun ());
 			currentStep++;
+			m_KeepRunning = m_PlayerScript.m_canMove;
 		}
 		m_PlayerScript.endLogicalRun ();
 		yield return null;

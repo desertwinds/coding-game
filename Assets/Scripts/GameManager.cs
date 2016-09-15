@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour {
 		StopAllCoroutines ();
 		m_ActionManager.stopActions ();
 		m_GameRoutine = GameLoop();
-		restartPlayerPosition ();
+		restartLevel ();
 		StartCoroutine (m_GameRoutine);
 	}
 
@@ -117,8 +117,22 @@ public class GameManager : MonoBehaviour {
 		StopAllCoroutines ();
 		m_ActionManager.stopActions ();
 		m_GameRoutine = GameLoop();
-		restartPlayerPosition ();
+		restartLevel ();
 		StartCoroutine(this.quickRunLoop());
+	}
+
+	public void restartLevel(){
+		restartPlayerPosition ();
+		restartDoors ();
+	}
+
+	public void restartDoors(){
+		var switches = m_cameraScript.m_switches;
+		SwitchScript script;
+		foreach (var switchInst in switches) {
+			script = switchInst.GetComponent<SwitchScript> ();
+			script.restartDoors ();
+		}
 	}
 
 	public void restartPlayerPosition(){
