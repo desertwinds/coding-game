@@ -3,13 +3,17 @@ using System.Collections;
 
 public class SwitchScript : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
+	public DoorScript[] m_doors;
+
+	public void openDoors(){
+		foreach (DoorScript door in m_doors) {
+			door.openDoor ();
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public void restartDoors(){
+		foreach (var door in m_doors) {
+			door.closeDoor ();
+		}
 	}
 }

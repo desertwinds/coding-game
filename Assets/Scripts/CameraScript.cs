@@ -16,13 +16,14 @@ public class CameraScript : MonoBehaviour {
 	public GameObject level;
 
 	public Dictionary<TupleI, GameObject> m_Map { get; private set;}
-
+	public List<GameObject> m_switches { get; private set;}
 
 	// Use this for initialization
 	void Awake () {
 		Camera cam = GetComponent<Camera> ();
 		cam.ScreenToWorldPoint (new Vector3 (0f, Screen.height * 2f, 0f));
 		m_Map = new Dictionary<TupleI, GameObject> ();
+		m_switches = new List<GameObject> ();
 		//updateCameraPosition ();
 	}
 
@@ -59,10 +60,21 @@ public class CameraScript : MonoBehaviour {
 		int position_z;
 		TupleI tilePosition;
 		foreach(Transform trans in level.GetComponentInChildren<Transform>()){
+
+			//Create the tuple that contains the logical position of the tile in the map.
 			position_x = (int) Mathf.Floor (trans.position.x);
 			position_z = (int) Mathf.Floor (trans.position.z);
 			tilePosition = new TupleI (position_x, position_z);
+
+			//Add the logical tile to the map.
 			m_Map.Add (tilePosition, trans.gameObject);
+
+			//Adding to the switches list so that when the map is reseted the doors are reset too.
+			if(trans.gameObject.CompareTag("Switch")){
+				m_switches.Add (trans.gameObject);
+			}
+
+			//Start comparing to find the max and min position of tiles in x and in y
 			if(trans.position.x > max_x.x){
 				max_x = trans.position;
 			}
