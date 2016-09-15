@@ -79,11 +79,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator LevelEnding(){
-		m_text.text = "You are almost there. Try to get to the finish line.";
+		m_text.text = "Your code ran smoothly, but it seems that you are still not reaching the end.";
 		m_LevelCompleted = false;
 
-		if (playerFell ()) {
-			m_text.text = "Woops try not to fall from the map.";
+		if (!playerCanMove ()) {
+			m_text.text = m_PlayerScript.m_playerMessage;
 		}
 
 		if(reachedFinish()){
@@ -101,12 +101,8 @@ public class GameManager : MonoBehaviour {
 		return m_PlayerScript.m_Finished;
 	}
 
-	private bool playerIsAlive(){
-		return true;
-	}
-
-	private bool playerFell(){
-		return m_PlayerScript.m_PlayerFell;
+	private bool playerCanMove(){
+		return m_PlayerScript.m_canMove;
 	}
 
 	public void runScript(){
